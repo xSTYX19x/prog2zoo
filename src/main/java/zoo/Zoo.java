@@ -12,18 +12,22 @@ public class Zoo {
 
   private final List<Enclosure<? extends Animal>> enclosures = new ArrayList<>();
 
+  // Enclosure<? extends Animal>: akzeptiert alle spezialisierten Gehege.
   public void addEnclosure(Enclosure<? extends Animal> enclosure) {
     logger.info("addEnclosure aufgerufen: " + enclosure.getName());
     enclosures.add(enclosure);
     logger.fine("Zoo hat jetzt " + enclosures.size() + " Gehege.");
   }
 
+  // Unmodifiable: Aufrufer sollen keine Gehege direkt hinzufügen/entfernen.
   public List<Enclosure<? extends Animal>> getEnclosures() {
     logger.info("getEnclosures aufgerufen.");
     logger.fine("Zurückgegeben: " + enclosures.size() + " Gehege.");
     return Collections.unmodifiableList(enclosures);
   }
 
+  // Optional statt null: signalisiert explizit "könnte nicht da sein",
+  // kein NPE-Risiko beim Aufrufer (der muss .isPresent() prüfen).
   public Optional<Enclosure<? extends Animal>> findEnclosureByName(String name) {
     logger.info("findEnclosureByName aufgerufen: name = " + name);
     Optional<Enclosure<? extends Animal>> result =
@@ -36,6 +40,8 @@ public class Zoo {
     return result;
   }
 
+  // flatMap: "flacht" Stream<List<Animal>> zu Stream<Animal> ein.
+  // Jedes Gehege liefert eine Liste → flatMap vereint alle zu einem Stream.
   public List<Animal> getAllAnimals() {
     logger.info("getAllAnimals aufgerufen.");
     List<Animal> animals =
@@ -46,6 +52,9 @@ public class Zoo {
     return animals;
   }
 
+  // instanceof-Filter: erkennt auch Tiger/DomesticCat als Mammal (über Cat → Mammal).
+  // Pattern Matching: .map(a -> (Mammal) a) kann man als
+  // .filter(a -> a instanceof Mammal m).map(a -> (Mammal) a) schreiben.
   public List<Mammal> getAllMammals() {
     logger.info("getAllMammals aufgerufen.");
     List<Mammal> result =
@@ -54,6 +63,8 @@ public class Zoo {
     return result;
   }
 
+  // Predicate<Animal>: funktionales Interface → Aufrufer gibt Lambda mit.
+  // Beispiel: zoo.getAnimalsByPredicate(a -> a.name().startsWith("T"))
   public List<Animal> getAnimalsByPredicate(Predicate<Animal> predicate) {
     logger.info("getAnimalsByPredicate aufgerufen.");
     List<Animal> result = getAllAnimals().stream().filter(predicate).toList();
@@ -61,6 +72,8 @@ public class Zoo {
     return result;
   }
 
+  // groupingBy + counting: Map<KonkreterTypname, Anzahl>
+  // z.B. {"Trout" -> 2, "Tiger" -> 1, "DomesticCat" -> 3, ...}
   public Map<String, Long> countAnimalsByType() {
     logger.info("countAnimalsByType aufgerufen.");
     Map<String, Long> counts =
@@ -71,6 +84,7 @@ public class Zoo {
     return counts;
   }
 
+  // Rückgabetyp List<Enclosure<? extends Animal>>: konsistent mit enclosures-Feld.
   public List<Enclosure<? extends Animal>> getOvercrowdedEnclosures(int maxSize) {
     logger.info("getOvercrowdedEnclosures aufgerufen: maxSize=" + maxSize);
     List<Enclosure<? extends Animal>> result =
@@ -82,6 +96,8 @@ public class Zoo {
     return result;
   }
 
+  // Summiert nach Tier-Familie (nicht konkretem Typ).
+  // instanceof auf sealed-Hierarchie → exhaustiv, Tiger wird als Mammal gezählt.
   public String summary() {
     logger.info("summary aufgerufen.");
     List<Animal> all = getAllAnimals();
