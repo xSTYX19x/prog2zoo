@@ -20,8 +20,41 @@ public class Main {
 
     
     // Tiere erstellen
-    var zoo = getZoo();
+    var aquarium = new Aquarium("Großes Aquarium");
+    aquarium.add(new Trout("Forelle Nemo"));
+    aquarium.add(new Salmon("Lachs Sam"));
 
+    var terrarium = new Terrarium("Reptilienhaus");
+    terrarium.add(new Gecko("Gecko Gex"));
+    terrarium.add(new Iguana("Iggy"));
+
+    var mammalHouse = new MammalHouse("Säugetierhaus");
+    mammalHouse.add(new Dolphin("Flipper"));
+    mammalHouse.add(new Wolf("Balu"));
+
+    // CatHouse<DomesticCat>: NUR Hauskatzen rein – Tiger würde nicht kompilieren!
+    var catHouse = new CatHouse<DomesticCat>("Katzenhaus");
+    catHouse.add(new DomesticCat("Miau"));
+
+    // Zweites CatHouse für Tiger
+    var tigerHouse = new CatHouse<Tiger>("Tigergehege");
+    tigerHouse.add(new Tiger("Tony"));
+    tigerHouse.add(new Tiger("Shere Khan"));
+
+    var aviary = new Enclosure<Bird>("Vogelhaus");
+    aviary.add(new Eagle("Aar"));
+    aviary.add(new Parrot("Polly"));
+
+    
+    // Zoo aufbauen
+    var zoo = new Zoo();
+    zoo.addEnclosure(aquarium);
+    zoo.addEnclosure(terrarium);
+    zoo.addEnclosure(mammalHouse);
+    zoo.addEnclosure(catHouse);
+    zoo.addEnclosure(tigerHouse);
+    zoo.addEnclosure(aviary);
+    
     // Zoo-Methoden demonstrieren
     System.out.println("\n=== Summary ===");
     System.out.println(zoo.summary());
@@ -54,43 +87,5 @@ public class Main {
     zooLogger.setLevel(Level.FINE);
     handler.setLevel(Level.FINE);
     zoo.getAllAnimals(); // INFO + FINE: sichtbar
-  }
-
-  private static Zoo getZoo() {
-    var aquarium = new Aquarium("Großes Aquarium");
-    aquarium.add(new Trout("Forelle Nemo"));
-    aquarium.add(new Salmon("Lachs Sam"));
-
-    var terrarium = new Terrarium("Reptilienhaus");
-    terrarium.add(new Gecko("Gecko Gex"));
-    terrarium.add(new Iguana("Iggy"));
-
-    var mammalHouse = new MammalHouse("Säugetierhaus");
-    mammalHouse.add(new Dolphin("Flipper"));
-    mammalHouse.add(new Wolf("Balu"));
-
-    // CatHouse<DomesticCat>: NUR Hauskatzen rein – Tiger würde nicht kompilieren!
-    var catHouse = new CatHouse<DomesticCat>("Katzenhaus");
-    catHouse.add(new DomesticCat("Miau"));
-
-    // Zweites CatHouse für Tiger
-    var tigerHouse = new CatHouse<Tiger>("Tigergehege");
-    tigerHouse.add(new Tiger("Tony"));
-    tigerHouse.add(new Tiger("Shere Khan"));
-
-    var aviary = new Enclosure<Bird>("Vogelhaus");
-    aviary.add(new Eagle("Aar"));
-    aviary.add(new Parrot("Polly"));
-
-
-    // Zoo aufbauen
-    var zoo = new Zoo();
-    zoo.addEnclosure(aquarium);
-    zoo.addEnclosure(terrarium);
-    zoo.addEnclosure(mammalHouse);
-    zoo.addEnclosure(catHouse);
-    zoo.addEnclosure(tigerHouse);
-    zoo.addEnclosure(aviary);
-    return zoo;
   }
 }
